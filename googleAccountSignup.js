@@ -1,4 +1,7 @@
 const puppeteer = require('puppeteer');
+require('dotenv').config();
+
+const { USERNAME, PASSWORD } = process.env;
 
 class HTMLtag {
   static A = new HTMLtag('a');

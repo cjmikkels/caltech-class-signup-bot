@@ -12,7 +12,9 @@ const config = {
   delayInMilliseconds: 0,
   classes: [
     {
-      department: '',
+      department: 'Ch',
+      className: 'Ch 006A',
+      section: '01 Beauchamp, J',
     },
   ],
 };
@@ -26,9 +28,14 @@ const signIn = async (page) => {
   await page.click('input[type=submit]');
 };
 
-const signUpForClasses = async () => {
-  const class = config.classes[0];
-  // await page.select('#telCountryInput', 'my-value');
+const signUpForClasses = async (page2) => {
+  console.log('in sufc fxn');
+  const classToSignUpFor = config.classes[0];
+
+  // await page2.select('#P63_DEPARTMENT', 'Ch');
+  // await page2.select('select#P63_DEPARTMENT', 'Ch');
+  // console.log(await page2.contents());
+  await page2.select('select[name=P63_DEPARTMENT]', 'Ch');
 };
 
 const signupForClasses = async () => {
@@ -92,13 +99,14 @@ const signupForClasses = async () => {
 
   await Promise.all([
     clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
-    page2.waitForNavigation()
+    page2.waitForNavigation(),
   ]);
 
+  // console.log(first);
 
   await Promise.all([
     clickElementWithCertainText(page2, 'Enter New Course', HTMLtag.Span),
-    page2.waitForNavigation()
+    page2.waitForSelector('button#NEW_COURSE'),
   ]);
 
   // console.log('bfr');
@@ -106,7 +114,8 @@ const signupForClasses = async () => {
   // console.log('aft');
 
   // await browser.close();
-  await signUpForClass();
+  console.log('helloooo');
+  await signUpForClasses(page2);
 };
 
 signupForClasses();

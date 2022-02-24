@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const config = {
   canViewBrowser: true,
-  delayInMilliseconds: 100,
+  delayInMilliseconds: 1000,
 };
 
 const { USERNAME, PASSWORD } = process.env;
@@ -28,7 +28,9 @@ const signupForClasses = async () => {
   });
 
   const page = await browser.newPage();
-  await page.goto('https://access.caltech.edu');
+  await page.goto(
+    'https://access.caltech.edu/pls/regis/f?p=2000:24:282218498625:::::',
+  );
 
   await signIn(page);
 
@@ -39,8 +41,21 @@ const signupForClasses = async () => {
     HTMLtag.A,
   );
 
-  // await clickElementWithCertainText(page, 'Course Enrollment', HTMLtag.A);
-  // console.log(3);
+  // await clickElementWithCertainText(page, `Course Enrollment `, HTMLtag.A);
+  // await clickElementWithCertainText(page, `"Course Enrollment "`, HTMLtag.A);
+  // await clickElementWithCertainText(
+  //   page,
+  //   `Course Enrollment <span class="links-block__link__arrow">&nbsp; &gt;</span>`,
+  //   HTMLtag.A,
+  // );
+  // await clickElementWithCertainText(
+  //   page,
+  //   `"Course Enrollment "<span class="links-block__link__arrow">&nbsp; &gt;</span>`,
+  //   HTMLtag.A,
+  // );
+
+  // await page.click('a.links-block__link');
+  console.log(await page.content());
 
   // await browser.close();
 };

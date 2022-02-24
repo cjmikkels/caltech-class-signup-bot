@@ -10,6 +10,11 @@ require('dotenv').config();
 const config = {
   canViewBrowser: true,
   delayInMilliseconds: 0,
+  classes: [
+    {
+      department: '',
+    },
+  ],
 };
 
 const { USERNAME, PASSWORD } = process.env;
@@ -19,6 +24,11 @@ const signIn = async (page) => {
   await typeIntoElement(page, 'input[name=password]', PASSWORD);
 
   await page.click('input[type=submit]');
+};
+
+const signUpForClasses = async () => {
+  const class = config.classes[0];
+  // await page.select('#telCountryInput', 'my-value');
 };
 
 const signupForClasses = async () => {
@@ -66,7 +76,7 @@ const signupForClasses = async () => {
 
   await Promise.all([
     page2.waitForNavigation(),
-    clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A)
+    clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A),
   ]);
 
   // await page2.goBack();
@@ -74,9 +84,11 @@ const signupForClasses = async () => {
   // console.log(await page2.content());
   // // console.log('after');
   // // await page2.click('a.t-Tabs-link');
-  
-  await Promise.all([clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
-  await page2.waitForNavigation()]);
+
+  await Promise.all([
+    clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
+    await page2.waitForNavigation(),
+  ]);
 
   await Promise.all([
     clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
@@ -94,6 +106,7 @@ const signupForClasses = async () => {
   // console.log('aft');
 
   // await browser.close();
+  await signUpForClass();
 };
 
 signupForClasses();

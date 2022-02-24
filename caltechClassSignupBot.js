@@ -54,7 +54,7 @@ const signupForClasses = async () => {
   //   HTMLtag.A,
   // );
 
-  // await page.click('a.links-block__link');
+  // await page.click('a.links-block__link'); //
   console.log(await page.content());
 
   // await browser.close();

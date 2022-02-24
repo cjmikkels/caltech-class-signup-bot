@@ -1,4 +1,7 @@
 const puppeteer = require('puppeteer');
+require('dotenv').config();
+
+const { USERNAME, PASSWORD } = process.env;
 
 class HTMLtag {
   static A = new HTMLtag('a');
@@ -32,15 +35,15 @@ const clickElementWithCertainText = async (page, text, tagType) => {
   return;
 };
 
-const createGoogleAccounts = async () => {
+const signupForClasses = async () => {
   const browser = await puppeteer.launch({ headless: false, slowMo: 2000 });
 
   const page = await browser.newPage();
-  await page.goto('https://google.com');
+  await page.goto('https://access.caltech.edu');
 
-  await clickElementWithCertainText(page, 'Sign in', HTMLtag.A);
+  // await clickElementWithCertainText(page, 'Sign in', HTMLtag.A);
 
   await browser.close();
 };
 
-createGoogleAccounts();
+signupForClasses();

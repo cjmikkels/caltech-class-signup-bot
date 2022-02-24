@@ -57,9 +57,19 @@ const signupForClasses = async () => {
   const page2 = await newPagePromise;
   await page2.bringToFront();
 
-  await clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A);
+  // await clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A);
 
-  // await clickElementWithCertainText(page2, 'Terms of Use', HTMLtag.A);
+  await Promise.all([
+    page2.waitForNavigation(),
+    clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A),
+  ]);
+  // await page2.goBack();
+  // console.log('before');
+  // console.log(await page2.content());
+  // // console.log('after');
+  // // await page2.click('a.t-Tabs-link');
+
+  await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A);
 
   // console.log('bfr');
   // await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.Span);

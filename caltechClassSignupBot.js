@@ -66,13 +66,17 @@ const signupForClasses = async () => {
 
   await Promise.all([
     page2.waitForNavigation(),
-    clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A),
+    clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A)
   ]);
+
   // await page2.goBack();
   // console.log('before');
   // console.log(await page2.content());
   // // console.log('after');
   // // await page2.click('a.t-Tabs-link');
+  
+  await Promise.all([clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
+  await page2.waitForNavigation()]);
 
   await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A);
 

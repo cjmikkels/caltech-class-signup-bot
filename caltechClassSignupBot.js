@@ -48,17 +48,14 @@ const signIn = async (page) => {
 };
 
 const signupForClasses = async () => {
-  // console.log(USERNAME);
   const browser = await puppeteer.launch({ headless: false, slowMo: 100 });
 
   const page = await browser.newPage();
-  await page.goto('https://access.caltech.edu');
+  await page.goto('https://google.com');
 
-  await signIn(page);
+  // await signIn(page);
 
-  // await clickElementWithCertainText(page, 'Sign in', HTMLtag.A);
-
-  // await browser.close();
+  await clickElementWithCertainText(page, 'Sign in', HTMLtag.A);
 };
 
 // console.log(USERNAME);

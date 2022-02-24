@@ -78,7 +78,16 @@ const signupForClasses = async () => {
   await Promise.all([clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
   await page2.waitForNavigation()]);
 
-  await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A);
+  await Promise.all([
+    clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
+    page2.waitForNavigation()
+  ]);
+
+
+  await Promise.all([
+    clickElementWithCertainText(page2, 'Enter New Course', HTMLtag.Span),
+    page2.waitForNavigation()
+  ]);
 
   // console.log('bfr');
   // await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.Span);

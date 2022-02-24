@@ -8,7 +8,7 @@ const {
 require('dotenv').config();
 
 const config = {
-  canViewBrowser: false,
+  canViewBrowser: true,
   delayInMilliseconds: 100,
 };
 
@@ -32,7 +32,15 @@ const signupForClasses = async () => {
 
   await signIn(page);
 
-  // await clickElementWithCertainText(page, 'Sign in', HTMLtag.A);
+  // Open REGIS
+  await clickElementWithCertainText(
+    page,
+    'Registrar Information Systems (REGIS)',
+    HTMLtag.A,
+  );
+
+  // await clickElementWithCertainText(page, 'Course Enrollment', HTMLtag.A);
+  // console.log(3);
 
   // await browser.close();
 };

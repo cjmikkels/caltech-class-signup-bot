@@ -1,6 +1,7 @@
 class HTMLtag {
   static A = new HTMLtag('a');
   static Button = new HTMLtag('button');
+  static Span = new HTMLtag('span');
 
   constructor(name) {
     this.name = name;
@@ -24,6 +25,13 @@ const clickElementWithCertainText = async (page, text, tagType) => {
       break;
 
     case HTMLtag.button:
+      break;
+
+    case HTMLtag.Span:
+      const [span] = await page.$x(`//span[contains(., '${text}')]`);
+      if (span) {
+        await span.click();
+      }
       break;
   }
 

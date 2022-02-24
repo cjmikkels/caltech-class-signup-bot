@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const config = {
   canViewBrowser: true,
-  delayInMilliseconds: 1000,
+  delayInMilliseconds: 100,
 };
 
 const { USERNAME, PASSWORD } = process.env;
@@ -28,34 +28,42 @@ const signupForClasses = async () => {
   });
 
   const page = await browser.newPage();
-  await page.goto(
-    'https://access.caltech.edu/pls/regis/f?p=2000:24:282218498625:::::',
-  );
+
+  const accessUrl = 'access.caltech.edu';
+  const regisUrl = 'access.caltech.edu/pls/regis/f?p=2000:24:282218498625:::::';
+
+  await page.goto(`https://${accessUrl}`);
 
   await signIn(page);
 
-  // Open REGIS
+  /*
+  Clicking REGIS opens a new tab, so we need to wait until this tab
+  has finished being created then switch to it.
+  */
+
+  // Create a promise to hold the new page
+  const newPagePromise = new Promise((x) =>
+    browser.once('targetcreated', (target) => x(target.page())),
+  );
+
+  // Click on the link to open REGIS, thereby opening a new tab
   await clickElementWithCertainText(
     page,
     'Registrar Information Systems (REGIS)',
     HTMLtag.A,
   );
 
-  // await clickElementWithCertainText(page, `Course Enrollment `, HTMLtag.A);
-  // await clickElementWithCertainText(page, `"Course Enrollment "`, HTMLtag.A);
-  // await clickElementWithCertainText(
-  //   page,
-  //   `Course Enrollment <span class="links-block__link__arrow">&nbsp; &gt;</span>`,
-  //   HTMLtag.A,
-  // );
-  // await clickElementWithCertainText(
-  //   page,
-  //   `"Course Enrollment "<span class="links-block__link__arrow">&nbsp; &gt;</span>`,
-  //   HTMLtag.A,
-  // );
+  // Wait for the new page promise to resolve, then switch to it
+  const page2 = await newPagePromise;
+  await page2.bringToFront();
 
-  // await page.click('a.links-block__link'); //
-  console.log(await page.content());
+  await clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A);
+
+  // await clickElementWithCertainText(page2, 'Terms of Use', HTMLtag.A);
+
+  // console.log('bfr');
+  // await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.Span);
+  // console.log('aft');
 
   // await browser.close();
 };

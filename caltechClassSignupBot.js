@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const config = {
   canViewBrowser: true,
-  delayInMilliseconds: 100,
+  delayInMilliseconds: 0,
 };
 
 const { USERNAME, PASSWORD } = process.env;
@@ -34,7 +34,7 @@ const signupForClasses = async () => {
 
   await page.goto(`https://${accessUrl}`);
 
-  await signIn(page);
+  await Promise.all([page.waitForNavigation(), signIn(page)]);
 
   /*
   Clicking REGIS opens a new tab, so we need to wait until this tab
@@ -52,6 +52,11 @@ const signupForClasses = async () => {
     'Registrar Information Systems (REGIS)',
     HTMLtag.A,
   );
+  // await clickElementWithCertainText(
+  //   page,
+  //   'Registrar Information Systems (REGIS)',
+  //   HTMLtag.A,
+  // );
 
   // Wait for the new page promise to resolve, then switch to it
   const page2 = await newPagePromise;

@@ -35,15 +35,29 @@ const clickElementWithCertainText = async (page, text, tagType) => {
   return;
 };
 
+const typeIntoElement = async (page, elementIdentifier, stringToType) => {
+  await page.focus(elementIdentifier);
+  await page.keyboard.type(stringToType);
+};
+
+const signIn = async (page) => {
+  await typeIntoElement(page, 'input[name=login]', USERNAME);
+  await typeIntoElement(page, 'input[name=password]', PASSWORD);
+};
+
 const signupForClasses = async () => {
-  const browser = await puppeteer.launch({ headless: false, slowMo: 2000 });
+  // console.log(USERNAME);
+  const browser = await puppeteer.launch({ headless: false, slowMo: 100 });
 
   const page = await browser.newPage();
   await page.goto('https://access.caltech.edu');
 
+  await signIn(page);
+
   // await clickElementWithCertainText(page, 'Sign in', HTMLtag.A);
 
-  await browser.close();
+  // await browser.close();
 };
 
+// console.log(USERNAME);
 signupForClasses();

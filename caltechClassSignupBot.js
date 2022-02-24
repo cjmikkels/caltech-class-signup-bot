@@ -35,7 +35,12 @@ const signUpForClasses = async (page2) => {
   // await page2.select('#P63_DEPARTMENT', 'Ch');
   // await page2.select('select#P63_DEPARTMENT', 'Ch');
   // console.log(await page2.contents());
-  await page2.select('select[name=P63_DEPARTMENT]', 'Ch');
+  // await page2.select('select[name=P63_DEPARTMENT]', 'Ch');
+  // await page2.select('select[name=P63_DEPARTMENT]', 'Ch');
+  await Promise.all([
+    page2.select('select[name=P63_DEPARTMENT]', 'Ch'),
+    page2.waitForSelector('select[name=P63_DEPARTMENT]'),
+  ]);
 };
 
 const signupForClasses = async () => {
@@ -115,6 +120,9 @@ const signupForClasses = async () => {
 
   // await browser.close();
   console.log('helloooo');
+  // await page2.waitForSelector('select[name=P63_DEPARTMENT]');
+  await page.waitFor(1000);
+  console.log('selector should be here');
   await signUpForClasses(page2);
 };
 

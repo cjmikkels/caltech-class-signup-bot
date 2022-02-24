@@ -43,6 +43,8 @@ const typeIntoElement = async (page, elementIdentifier, stringToType) => {
 const signIn = async (page) => {
   await typeIntoElement(page, 'input[name=login]', USERNAME);
   await typeIntoElement(page, 'input[name=password]', PASSWORD);
+
+  await page.click('input[type=submit]');
 };
 
 const signupForClasses = async () => {

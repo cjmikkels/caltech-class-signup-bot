@@ -55,7 +55,9 @@ const signupForClasses = async () => {
   const page = await browser.newPage();
 
   const accessUrl = 'access.caltech.edu';
-  const regisUrl = 'access.caltech.edu/pls/regis/f?p=2000:24:282218498625:::::';
+  const regisUrl = 'access.caltech.edu/pls/regis';
+  const regisUrlLong =
+    'access.caltech.edu/pls/regis/f?p=2000:24:282218498625:::::';
 
   await page.goto(`https://${accessUrl}`);
 
@@ -90,16 +92,13 @@ const signupForClasses = async () => {
   // so we do it a 3rd time just in case
   await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A);
 
-  console.log('bfr new course');
   await clickElementWithCertainText(
     page2,
     'Enter New Course',
     HTMLtag.Span,
     false,
   );
-  console.log('after new course');
   console.log(await page2.content());
-  debugger;
   // console.log('helloooo');
   // await page2.waitForSelector('select[name=P63_DEPARTMENT]');
   // await page.waitFor(1000);
@@ -107,7 +106,9 @@ const signupForClasses = async () => {
   // await signUpForClasses(page2);
 
   const page3 = await browser.newPage();
-  await page3.goto(`https://google.com`);
+  const enterNewCourseDialogParams =
+    'f?p=2000:63:3048316201078::NO:RP,63:P63_TERM_ID&p_dialog_cs=aZtApCDYV-vnOsnVLAVSeFciXcT28-FbDReeQYgr09uzqhf7QGWOd-jeDU4Rb-G0mryq20UloDenzND8WdBUPA';
+  await page3.goto(`https://${regisUrl}/${enterNewCourseDialogParams}`);
   console.log(await page3.content());
 };
 

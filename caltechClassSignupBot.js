@@ -98,8 +98,14 @@ const signupForClasses = async () => {
     false,
   );
   console.log('after new course');
-  console.log(await page2.content());
-  debugger;
+  
+  await page2.waitForSelector('iframe');
+  const frameHandle = await page2.$("iframe");
+  const frameUrl = await (await frameHandle.getProperty("src")).jsonValue();
+  
+
+
+
   // console.log('helloooo');
   // await page2.waitForSelector('select[name=P63_DEPARTMENT]');
   // await page.waitFor(1000);

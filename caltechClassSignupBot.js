@@ -116,10 +116,10 @@ const signupForClasses = async () => {
   const page3 = await browser.newPage();
   const enterNewCourseDialogParams =
     'f?p=2000:63:3048316201078::NO:RP,63:P63_TERM_ID&p_dialog_cs=aZtApCDYV-vnOsnVLAVSeFciXcT28-FbDReeQYgr09uzqhf7QGWOd-jeDU4Rb-G0mryq20UloDenzND8WdBUPA';
-  await page3.goto(`https://${regisUrl}/${enterNewCourseDialogParams}`);
+  await page3.goto(frameUrl);
   console.log(await page3.content());
 
-  // await signUpForClasses(page3);
+  await signUpForClasses(page3);
 };
 
 signupForClasses();

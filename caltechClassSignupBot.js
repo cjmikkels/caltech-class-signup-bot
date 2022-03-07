@@ -90,13 +90,21 @@ const signupForClasses = async () => {
   // so we do it a 3rd time just in case
   await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A);
 
-  await clickElementWithCertainText(page2, 'Enter New Course', HTMLtag.Span);
-
-  console.log('helloooo');
+  console.log('bfr new course');
+  await clickElementWithCertainText(
+    page2,
+    'Enter New Course',
+    HTMLtag.Span,
+    false,
+  );
+  console.log('after new course');
+  console.log(await page2.content());
+  debugger;
+  // console.log('helloooo');
   // await page2.waitForSelector('select[name=P63_DEPARTMENT]');
-  await page.waitFor(1000);
-  console.log('selector should be here');
-  await signUpForClasses(page2);
+  // await page.waitFor(1000);
+  // console.log('selector should be here');
+  // await signUpForClasses(page2);
 };
 
 signupForClasses();

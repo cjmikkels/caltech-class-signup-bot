@@ -15,12 +15,21 @@ class HTMLtag {
  * @param {HTMLtag} tagType – which HTML tag type you're clicking, e.g. button, a, etc.
  * @returns
  */
-const clickElementWithCertainText = async (page, text, tagType) => {
+const clickElementWithCertainText = async (
+  page,
+  text,
+  tagType,
+  shouldWaitForNavigation = true,
+) => {
   switch (tagType) {
     case HTMLtag.A:
       const [a] = await page.$x(`//a[contains(., '${text}')]`);
       if (a) {
-        await Promise.all([page.waitForNavigation(), a.click()]);
+        if (shouldWaitForNavigation) {
+          await Promise.all([page.waitForNavigation(), a.click()]);
+        } else {
+          await a.click();
+        }
       }
       break;
 
@@ -30,7 +39,11 @@ const clickElementWithCertainText = async (page, text, tagType) => {
     case HTMLtag.Span:
       const [span] = await page.$x(`//span[contains(., '${text}')]`);
       if (span) {
-        await Promise.all([page.waitForNavigation(), span.click()]);
+        if (shouldWaitForNavigation) {
+          await Promise.all([page.waitForNavigation(), span.click()]);
+        } else {
+          await span.click();
+        }
       }
       break;
   }

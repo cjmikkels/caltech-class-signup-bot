@@ -20,7 +20,7 @@ const clickElementWithCertainText = async (page, text, tagType) => {
     case HTMLtag.A:
       const [a] = await page.$x(`//a[contains(., '${text}')]`);
       if (a) {
-        await a.click();
+        await Promise.all([page.waitForNavigation(), a.click()]);
       }
       break;
 
@@ -30,10 +30,15 @@ const clickElementWithCertainText = async (page, text, tagType) => {
     case HTMLtag.Span:
       const [span] = await page.$x(`//span[contains(., '${text}')]`);
       if (span) {
-        await span.click();
+        await Promise.all([page.waitForNavigation(), span.click()]);
       }
       break;
   }
+
+  // await Promise.all([
+  //   page2.waitForNavigation(),
+  //   clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A),
+  // ]);
 
   return;
 };

@@ -25,7 +25,10 @@ const signIn = async (page) => {
   await typeIntoElement(page, 'input[name=login]', USERNAME);
   await typeIntoElement(page, 'input[name=password]', PASSWORD);
 
-  await page.click('input[type=submit]');
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('input[type=submit]'),
+  ]);
 };
 
 const signUpForClasses = async (page2) => {
@@ -56,7 +59,7 @@ const signupForClasses = async () => {
 
   await page.goto(`https://${accessUrl}`);
 
-  await Promise.all([page.waitForNavigation(), signIn(page)]);
+  await signIn(page);
 
   /*
   Clicking REGIS opens a new tab, so we need to wait until this tab
@@ -74,51 +77,21 @@ const signupForClasses = async () => {
     'Registrar Information Systems (REGIS)',
     HTMLtag.A,
   );
-  // await clickElementWithCertainText(
-  //   page,
-  //   'Registrar Information Systems (REGIS)',
-  //   HTMLtag.A,
-  // );
 
   // Wait for the new page promise to resolve, then switch to it
   const page2 = await newPagePromise;
   await page2.bringToFront();
 
-  // await clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A);
+  await clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A);
 
-  await Promise.all([
-    page2.waitForNavigation(),
-    clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A),
-  ]);
+  await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A);
 
-  // await page2.goBack();
-  // console.log('before');
-  // console.log(await page2.content());
-  // // console.log('after');
-  // // await page2.click('a.t-Tabs-link');
+  // For some reason, only doing this twice doesn't work consistently,
+  // so we do it a 3rd time just in case
+  await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A);
 
-  await Promise.all([
-    clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
-    await page2.waitForNavigation(),
-  ]);
+  await clickElementWithCertainText(page2, 'Enter New Course', HTMLtag.Span);
 
-  await Promise.all([
-    clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.A),
-    page2.waitForNavigation(),
-  ]);
-
-  // console.log(first);
-
-  await Promise.all([
-    clickElementWithCertainText(page2, 'Enter New Course', HTMLtag.Span),
-    page2.waitForSelector('button#NEW_COURSE'),
-  ]);
-
-  // console.log('bfr');
-  // await clickElementWithCertainText(page2, 'Course Enrollment', HTMLtag.Span);
-  // console.log('aft');
-
-  // await browser.close();
   console.log('helloooo');
   // await page2.waitForSelector('select[name=P63_DEPARTMENT]');
   await page.waitFor(1000);

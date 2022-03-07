@@ -105,6 +105,10 @@ const signupForClasses = async () => {
   // await page.waitFor(1000);
   // console.log('selector should be here');
   // await signUpForClasses(page2);
+
+  const page3 = await browser.newPage();
+  await page3.goto(`https://google.com`);
+  console.log(await page3.content());
 };
 
 signupForClasses();

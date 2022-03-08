@@ -41,9 +41,18 @@ const signUpForClasses = async (page2) => {
   // await page2.select('select[name=P63_DEPARTMENT]', 'Ch');
   // await page2.select('select[name=P63_DEPARTMENT]', 'Ch');
   await Promise.all([
-    page2.select('select[name=P63_DEPARTMENT]', 'Ch'),
-    page2.waitForSelector('select[name=P63_DEPARTMENT]'),
+    page2.select('select#P63_DEPARTMENT', '142'),
+    page2.waitForSelector('select#P63_DEPARTMENT'),
   ]);
+
+  await page2.waitForFunction(() => document.querySelector('select#P63_OFFERING_NAME').length > 1);
+  await page2.select('select#P63_OFFERING_NAME', '86961');
+
+  await page2.waitForFunction(() => document.querySelector('select#P63_SECTION_INSTRUCTOR').length > 1);
+  await page2.select('select#P63_SECTION_INSTRUCTOR', '308968');
+
+
+  await clickElementWithCertainText(page2, 'Save', HTMLtag.Span);
 };
 
 const signupForClasses = async () => {

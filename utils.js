@@ -102,7 +102,7 @@ const selectClassInfo = async (page, selectElementIdentifier, desiredInfo) => {
   for (const optionElement of optionElements) {
     const optionName = await getElementText(page, optionElement);
 
-    if (optionName === desiredInfo) {
+    if (optionName.includes(desiredInfo)) {
       desiredInfoId = await getProperty(optionElement, htmlTagAttributes.VALUE);
       break;
     }
@@ -114,6 +114,11 @@ const selectClassInfo = async (page, selectElementIdentifier, desiredInfo) => {
   ]);
 };
 
+/**
+ * Signs up for a class
+ * @param {*} page
+ * @param {*} classToSignUpFor – object for the class we want to sign up for (from the config object)
+ */
 const signUpForGivenClass = async (page, classToSignUpFor) => {
   await selectClassInfo(
     page,
@@ -147,6 +152,78 @@ const signUpForGivenClass = async (page, classToSignUpFor) => {
   await clickElementWithCertainText(page, 'Save', HTMLtag.Span);
 };
 
+/**
+ * Returns the ASCII value of a character
+ * @param {*} char
+ * @returns
+ */
+const getAsciiValue = (char) => {
+  return char.charCodeAt(0);
+};
+
+const asciiValueOfZero = getAsciiValue('0');
+const asciiValueOfNine = getAsciiValue('9');
+
+/**
+ * Returns boolean representing whether the given character is a digit
+ * @param {*} char
+ * @returns
+ */
+const isDigit = (char) => {
+  const asciiValue = getAsciiValue(char);
+  return asciiValue >= asciiValueOfZero && asciiValue <= asciiValueOfNine;
+};
+
+/**
+ * Returns the number of digits in a string
+ * @param {*} string
+ * @returns
+ */
+const getNumDigitsInString = (string) => {
+  let numDigits = 0;
+
+  for (let char of string) {
+    if (isDigit(char)) {
+      numDigits++;
+    }
+  }
+
+  return numDigits;
+};
+
+/**
+ * Returns index of first digit in string
+ * @param {*} string
+ */
+const getIndexOfFirstDigit = (string) => {
+  for (let i = 0; i < string.length; i++) {
+    const char = string.charAt(i);
+
+    if (isDigit(char)) return i;
+  }
+
+  return -1;
+};
+
+/**
+ * Formats a string e.g. "Ma 1c" => "Ma 001C"
+ * @param {*} string – the initial string
+ * @param {*} desiredNumberSize – how many number we want, e.g. if we want 1 => 001, desiredNumberSize = 3
+ * @returns
+ */
+const format = (string, desiredNumberSize) => {
+  const numDigitsInString = getNumDigitsInString(string);
+  const numDigitsToAdd = desiredNumberSize - numDigitsInString;
+
+  const indexOfFirstDigit = getIndexOfFirstDigit(string);
+
+  const beforeDigits = string.substring(0, indexOfFirstDigit);
+  const zeroInsertion = '0'.repeat(numDigitsToAdd);
+  const remainingCharacters = string.substring(indexOfFirstDigit).toUpperCase();
+
+  return beforeDigits + zeroInsertion + remainingCharacters;
+};
+
 module.exports = {
   HTMLtag,
   clickElementWithCertainText,
@@ -155,4 +232,5 @@ module.exports = {
   getElementText,
   selectClassInfo,
   signUpForGivenClass,
+  format,
 };

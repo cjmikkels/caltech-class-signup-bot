@@ -7,6 +7,7 @@ const {
   getElementText,
   selectClassInfo,
   signUpForGivenClass,
+  format,
 } = require('./utils');
 const { htmlTagAttributes } = require('./constants');
 
@@ -14,21 +15,38 @@ require('dotenv').config();
 
 const { USERNAME, PASSWORD } = process.env;
 
-const config = {
+const classes = [
+  {
+    department: 'Ma',
+    offeringName: 'Ma 1c',
+    sectionInstructor: '7',
+  },
+  // {
+  //   department: 'Ma',
+  //   offeringName: 'Ma 001C',
+  //   sectionInstructor: '07 Yu, T',
+  // },
+];
+
+const sizeOfClassNumber = 3;
+const sizeOfSectionNumber = 2;
+
+for (const desiredClass of classes) {
+  desiredClass.offeringName = format(
+    desiredClass.offeringName,
+    sizeOfClassNumber,
+  );
+
+  desiredClass.sectionInstructor = format(
+    desiredClass.sectionInstructor,
+    sizeOfSectionNumber,
+  );
+}
+
+let config = {
   canViewBrowser: true,
   delayInMilliseconds: 0,
-  classes: [
-    {
-      department: 'Ma',
-      offeringName: 'Ma 001C',
-      sectionInstructor: '07 Yu, T',
-    },
-    {
-      department: 'Ma',
-      offeringName: 'Ma 001C',
-      sectionInstructor: '07 Yu, T',
-    },
-  ],
+  classes: classes,
 };
 
 const signIn = async (page) => {

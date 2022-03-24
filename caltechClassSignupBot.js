@@ -6,8 +6,9 @@ const {
   getProperty,
   getElementText,
   selectClassInfo,
+  signUpForGivenClass,
 } = require('./utils');
-const { htmlTagAttributes, selectTagIdentifiers } = require('./constants');
+const { htmlTagAttributes } = require('./constants');
 
 require('dotenv').config();
 
@@ -19,8 +20,13 @@ const config = {
   classes: [
     {
       department: 'Ma',
-      className: 'Ma 001C',
-      section: '07 Yu, T',
+      offeringName: 'Ma 001C',
+      sectionInstructor: '07 Yu, T',
+    },
+    {
+      department: 'Ma',
+      offeringName: 'Ma 001C',
+      sectionInstructor: '07 Yu, T',
     },
   ],
 };
@@ -35,79 +41,16 @@ const signIn = async (page) => {
   ]);
 };
 
-const signUpForClasses = async (page) => {
-  const classToSignUpFor = config.classes[0];
+const signUpForClasses = async (page, enterNewCourseUrl) => {
+  const classesToSignUpFor = config.classes;
 
-  //
-  const desiredClass = config.classes[0];
-
-  await selectClassInfo(
-    page,
-    selectTagIdentifiers.DEPARTMENT,
-    desiredClass.department,
-  );
-
-  // Populate the class department
-  // const optionElements = await page.$$('option');
-
-  // let desiredDepartmentId;
-  // for (const optionElement of optionElements) {
-  //   const optionName = await getElementText(page, optionElement);
-
-  //   if (optionName === desiredClass.department) {
-  //     desiredDepartmentId = await getProperty(
-  //       optionElement,
-  //       htmlTagAttributes.VALUE,
-  //     );
-  //     break;
-  //   }
-  // }
-
-  // await Promise.all([
-  //   page.select(selectTagIdentifiers.DEPARTMENT, desiredDepartmentId),
-  //   page.waitForSelector(selectTagIdentifiers.DEPARTMENT),
-  // ]);
-
-  // console.log(desiredDepartmentId);
-
-  // console.log(desiredClass.department);
-
-  // const el = await page.$('select#P63_OFFERING_NAME');
-  // const els = await page.$$('option');
-  // const options = el.children;
-
-  // await page.waitForSelector('select#P63_DEPARTMENT');
-  // await page.waitForSelector('option');
-
-  // console.log(await getProperty(els[1], htmlTagAttributes.VALUE));
-  // console.log(await getElementText(page, els[1]));
-
-  // make sure to check for null on page.$
-
-  //
-
-  /*
-  
-  */
-
-  // await page.waitForFunction(
-  //   () => document.querySelector('select#P63_OFFERING_NAME').length > 1,
-  // );
-  // await page.select('select#P63_OFFERING_NAME', '86961');
-
-  // await page.waitForFunction(
-  //   () => document.querySelector('select#P63_SECTION_INSTRUCTOR').length > 1,
-  // );
-  // await page.select('select#P63_SECTION_INSTRUCTOR', '308698');
-
-  // await page.waitForFunction(
-  //   () => document.querySelector('select#P63_GRADE_SCHEME').length > 0,
-  // );
-
-  // await clickElementWithCertainText(page, 'Save', HTMLtag.Span);
+  for (const classToSignUpFor of classesToSignUpFor) {
+    await signUpForGivenClass(page, classToSignUpFor);
+    await page.goto(enterNewCourseUrl);
+  }
 };
 
-const start = async () => {
+const main = async () => {
   const browser = await puppeteer.launch({
     headless: !config.canViewBrowser,
     slowMo: config.delayInMilliseconds,
@@ -167,7 +110,7 @@ const start = async () => {
   const page3 = await browser.newPage();
   await page3.goto(frameUrl);
 
-  await signUpForClasses(page3);
+  await signUpForClasses(page3, frameUrl);
 };
 
-start();
+main();

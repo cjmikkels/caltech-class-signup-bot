@@ -1,4 +1,4 @@
-const { htmlTagAttributes } = require('./constants');
+const { htmlTagAttributes, selectTagIdentifiers } = require('./constants');
 
 /**
  * A class to represent HTML tag types that we interact with
@@ -87,8 +87,14 @@ const getElementText = async (page, element) => {
   return await page.evaluate((el) => el.textContent, element);
 };
 
+/**
+ * Selects the desired class info for one select box (e.g. select "Ma" for department)
+ * @param {*} page
+ * @param {*} selectElementIdentifier – how we can grab the select element that we want to populate,
+ *  e.g. selectTagIdentifiers.DEPARTMENT = 'select#P63_DEPARTMENT'
+ * @param {*} desiredInfo – what info we're searching for, e.g. "Ma" for a department
+ */
 const selectClassInfo = async (page, selectElementIdentifier, desiredInfo) => {
-  // Populate the class department
   const optionElements = await page.$$('option');
 
   // let desiredDepartmentId;
@@ -108,7 +114,38 @@ const selectClassInfo = async (page, selectElementIdentifier, desiredInfo) => {
   ]);
 };
 
-// selectClassInfo(selectorIdentifiers.DEPARTMENT, desiredClass.department);
+const signUpForGivenClass = async (page, classToSignUpFor) => {
+  await selectClassInfo(
+    page,
+    selectTagIdentifiers.DEPARTMENT,
+    classToSignUpFor.department,
+  );
+
+  await page.waitForFunction(
+    () => document.querySelector('select#P63_OFFERING_NAME').length > 1,
+  );
+
+  await selectClassInfo(
+    page,
+    selectTagIdentifiers.OFFERING_NAME,
+    classToSignUpFor.offeringName,
+  );
+
+  await page.waitForFunction(
+    () => document.querySelector('select#P63_SECTION_INSTRUCTOR').length > 1,
+  );
+  await selectClassInfo(
+    page,
+    selectTagIdentifiers.SECTION_INSTRUCTOR,
+    classToSignUpFor.sectionInstructor,
+  );
+
+  await page.waitForFunction(
+    () => document.querySelector('select#P63_GRADE_SCHEME').length > 0,
+  );
+
+  await clickElementWithCertainText(page, 'Save', HTMLtag.Span);
+};
 
 module.exports = {
   HTMLtag,
@@ -117,4 +154,5 @@ module.exports = {
   getProperty,
   getElementText,
   selectClassInfo,
+  signUpForGivenClass,
 };

@@ -6,8 +6,15 @@ const {
   getProperty,
   getElementText,
 } = require('./utils');
+const {
+  config,
+  htmlTagAttributes,
+  selectorIdentifiers,
+} = require('./constants');
 
 require('dotenv').config();
+
+const { USERNAME, PASSWORD } = process.env;
 
 const config = {
   canViewBrowser: true,
@@ -20,13 +27,6 @@ const config = {
     },
   ],
 };
-
-const htmlTagAttributes = {
-  VALUE: 'value',
-  SRC: 'src',
-};
-
-const { USERNAME, PASSWORD } = process.env;
 
 const signIn = async (page) => {
   await typeIntoElement(page, 'input[name=login]', USERNAME);
@@ -60,6 +60,11 @@ const signUpForClasses = async (page) => {
     }
   }
 
+  await Promise.all([
+    page.select('select#P63_DEPARTMENT', desiredDepartmentId),
+    page.waitForSelector('select#P63_DEPARTMENT'),
+  ]);
+
   console.log(desiredDepartmentId);
 
   // console.log(desiredClass.department);
@@ -79,10 +84,7 @@ const signUpForClasses = async (page) => {
   //
 
   /*
-  // await Promise.all([
-  //   page.select('select#P63_DEPARTMENT', '142'),
-  //   page.waitForSelector('select#P63_DEPARTMENT'),
-  // ]);
+  
   */
 
   // await page.waitForFunction(

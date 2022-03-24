@@ -32,14 +32,8 @@ const signIn = async (page) => {
 };
 
 const signUpForClasses = async (page) => {
-  console.log('in sufc fxn');
   const classToSignUpFor = config.classes[0];
 
-  // await page.select('#P63_DEPARTMENT', 'Ch');
-  // await page.select('select#P63_DEPARTMENT', 'Ch');
-  // console.log(await page.contents());
-  // await page.select('select[name=P63_DEPARTMENT]', 'Ch');
-  // await page.select('select[name=P63_DEPARTMENT]', 'Ch');
   await Promise.all([
     page.select('select#P63_DEPARTMENT', '142'),
     page.waitForSelector('select#P63_DEPARTMENT'),
@@ -59,10 +53,10 @@ const signUpForClasses = async (page) => {
     () => document.querySelector('select#P63_GRADE_SCHEME').length > 0,
   );
 
-  await clickElementWithCertainText(page, 'Save', HTMLtag.Span);
+  // await clickElementWithCertainText(page, 'Save', HTMLtag.Span);
 };
 
-const signupForClasses = async () => {
+const start = async () => {
   const browser = await puppeteer.launch({
     headless: !config.canViewBrowser,
     slowMo: config.delayInMilliseconds,
@@ -114,25 +108,15 @@ const signupForClasses = async () => {
     HTMLtag.Span,
     false,
   );
-  console.log('after new course');
 
   await page2.waitForSelector('iframe');
   const frameHandle = await page2.$('iframe');
   const frameUrl = await (await frameHandle.getProperty('src')).jsonValue();
 
-  // console.log('helloooo');
-  // await page2.waitForSelector('select[name=P63_DEPARTMENT]');
-  // await page.waitFor(1000);
-  // console.log('selector should be here');
-  // await signUpForClasses(page2);
-
   const page3 = await browser.newPage();
-  const enterNewCourseDialogParams =
-    'f?p=2000:63:3048316201078::NO:RP,63:P63_TERM_ID&p_dialog_cs=aZtApCDYV-vnOsnVLAVSeFciXcT28-FbDReeQYgr09uzqhf7QGWOd-jeDU4Rb-G0mryq20UloDenzND8WdBUPA';
   await page3.goto(frameUrl);
-  console.log(await page3.content());
 
   await signUpForClasses(page3);
 };
 
-signupForClasses();
+start();

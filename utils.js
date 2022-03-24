@@ -1,3 +1,6 @@
+/**
+ * A class to represent HTML tag types that we interact with
+ */
 class HTMLtag {
   static A = new HTMLtag('a');
   static Button = new HTMLtag('button');
@@ -9,7 +12,7 @@ class HTMLtag {
 }
 
 /**
- *
+ * Clicks the element with the provided text
  * @param {Page} page
  * @param {string} text - the text of the item you want to click
  * @param {HTMLtag} tagType – which HTML tag type you're clicking, e.g. button, a, etc.
@@ -48,16 +51,11 @@ const clickElementWithCertainText = async (
       break;
   }
 
-  // await Promise.all([
-  //   page2.waitForNavigation(),
-  //   clickElementWithCertainText(page2, 'Course Enrollment ', HTMLtag.A),
-  // ]);
-
   return;
 };
 
 /**
- *
+ * Types text into the specified element (e.g. into a text box)
  * @param {*} page
  * @param {*} elementIdentifier - identifier of element to type into e.g. 'input[name=login]'
  * @param {*} stringToType - string to type
@@ -67,4 +65,24 @@ const typeIntoElement = async (page, elementIdentifier, stringToType) => {
   await page.keyboard.type(stringToType);
 };
 
-module.exports = { HTMLtag, clickElementWithCertainText, typeIntoElement };
+const getProperty = async (element, property) => {
+  return await (await element.getProperty(property)).jsonValue();
+};
+
+/**
+ * Gets text of element e.g. \<div>hello\</div> => "hello"
+ * @param {*} page
+ * @param {*} element – element to get text of (NOT identifier like 'input[name=login])
+ * @returns
+ */
+const getElementText = async (page, element) => {
+  return await page.evaluate((el) => el.textContent, element);
+};
+
+module.exports = {
+  HTMLtag,
+  clickElementWithCertainText,
+  typeIntoElement,
+  getProperty,
+  getElementText,
+};

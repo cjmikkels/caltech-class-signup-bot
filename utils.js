@@ -1,3 +1,5 @@
+const { htmlTagAttributes } = require('./constants');
+
 /**
  * A class to represent HTML tag types that we interact with
  */
@@ -65,6 +67,12 @@ const typeIntoElement = async (page, elementIdentifier, stringToType) => {
   await page.keyboard.type(stringToType);
 };
 
+/**
+ * Get a given property of an element e.g. getProperty(\<img src="hi" />, 'src') => "hi"
+ * @param {*} element – element to get property from (NOT identifier like 'input[name=login]')
+ * @param {*} property – the property to retrieve, e.g. src, href, value, etc.
+ * @returns
+ */
 const getProperty = async (element, property) => {
   return await (await element.getProperty(property)).jsonValue();
 };
@@ -72,12 +80,35 @@ const getProperty = async (element, property) => {
 /**
  * Gets text of element e.g. \<div>hello\</div> => "hello"
  * @param {*} page
- * @param {*} element – element to get text of (NOT identifier like 'input[name=login])
+ * @param {*} element – element to get text of (NOT identifier like 'input[name=login]')
  * @returns
  */
 const getElementText = async (page, element) => {
   return await page.evaluate((el) => el.textContent, element);
 };
+
+const selectClassInfo = async (page, selectElementIdentifier, desiredInfo) => {
+  // Populate the class department
+  const optionElements = await page.$$('option');
+
+  // let desiredDepartmentId;
+  let desiredInfoId;
+  for (const optionElement of optionElements) {
+    const optionName = await getElementText(page, optionElement);
+
+    if (optionName === desiredInfo) {
+      desiredInfoId = await getProperty(optionElement, htmlTagAttributes.VALUE);
+      break;
+    }
+  }
+
+  await Promise.all([
+    page.select(selectElementIdentifier, desiredInfoId),
+    page.waitForSelector(selectElementIdentifier),
+  ]);
+};
+
+// selectClassInfo(selectorIdentifiers.DEPARTMENT, desiredClass.department);
 
 module.exports = {
   HTMLtag,
@@ -85,4 +116,5 @@ module.exports = {
   typeIntoElement,
   getProperty,
   getElementText,
+  selectClassInfo,
 };

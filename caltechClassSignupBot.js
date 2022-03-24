@@ -5,12 +5,9 @@ const {
   typeIntoElement,
   getProperty,
   getElementText,
+  selectClassInfo,
 } = require('./utils');
-const {
-  config,
-  htmlTagAttributes,
-  selectorIdentifiers,
-} = require('./constants');
+const { htmlTagAttributes, selectTagIdentifiers } = require('./constants');
 
 require('dotenv').config();
 
@@ -44,28 +41,34 @@ const signUpForClasses = async (page) => {
   //
   const desiredClass = config.classes[0];
 
+  await selectClassInfo(
+    page,
+    selectTagIdentifiers.DEPARTMENT,
+    desiredClass.department,
+  );
+
   // Populate the class department
-  const optionElements = await page.$$('option');
+  // const optionElements = await page.$$('option');
 
-  let desiredDepartmentId;
-  for (const optionElement of optionElements) {
-    const optionName = await getElementText(page, optionElement);
+  // let desiredDepartmentId;
+  // for (const optionElement of optionElements) {
+  //   const optionName = await getElementText(page, optionElement);
 
-    if (optionName === desiredClass.department) {
-      desiredDepartmentId = await getProperty(
-        optionElement,
-        htmlTagAttributes.VALUE,
-      );
-      break;
-    }
-  }
+  //   if (optionName === desiredClass.department) {
+  //     desiredDepartmentId = await getProperty(
+  //       optionElement,
+  //       htmlTagAttributes.VALUE,
+  //     );
+  //     break;
+  //   }
+  // }
 
-  await Promise.all([
-    page.select('select#P63_DEPARTMENT', desiredDepartmentId),
-    page.waitForSelector('select#P63_DEPARTMENT'),
-  ]);
+  // await Promise.all([
+  //   page.select(selectTagIdentifiers.DEPARTMENT, desiredDepartmentId),
+  //   page.waitForSelector(selectTagIdentifiers.DEPARTMENT),
+  // ]);
 
-  console.log(desiredDepartmentId);
+  // console.log(desiredDepartmentId);
 
   // console.log(desiredClass.department);
 

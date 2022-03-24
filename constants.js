@@ -3,11 +3,11 @@ const htmlTagAttributes = {
   SRC: 'src',
 };
 
-const selectorIdentifiers = {
+const selectTagIdentifiers = {
   DEPARTMENT: 'select#P63_DEPARTMENT',
 };
 
 module.exports = {
   htmlTagAttributes,
-  selectorIdentifiers,
+  selectTagIdentifiers,
 };

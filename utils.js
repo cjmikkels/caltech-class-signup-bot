@@ -88,6 +88,22 @@ const getElementText = async (page, element) => {
 };
 
 /**
+ * Returns the parent of the given element
+ * @param {ElementHandle} element – the element whose parent you want
+ * @returns
+ */
+const getParent = async (element) => {
+  return (await element.$x('..'))[0];
+};
+
+const checkForDesiredInfo = (optionName, desiredInfo) => {
+  const optionNameLowerCase = optionName.toLowerCase();
+  const desiredInfoLowerCase = desiredInfo.toLowerCase();
+
+  return optionNameLowerCase.includes(desiredInfoLowerCase);
+};
+
+/**
  * Selects the desired class info for one select box (e.g. select "Ma" for department)
  * @param {*} page
  * @param {*} selectElementIdentifier – how we can grab the select element that we want to populate,
@@ -97,17 +113,24 @@ const getElementText = async (page, element) => {
 const selectClassInfo = async (page, selectElementIdentifier, desiredInfo) => {
   const optionElements = await page.$$('option');
 
-  // let desiredDepartmentId;
   let desiredInfoId;
   for (const optionElement of optionElements) {
+    const parent = await getParent(optionElement);
+    const parentId = await getProperty(parent, 'id');
+
+    // If we're on SECTION_INSTRUCTOR, we only want to examine option elements
+    // under the SECTION_INSTRUCTOR select tag
+    if (!selectElementIdentifier.includes(parentId)) continue;
+
     const optionName = await getElementText(page, optionElement);
 
-    if (optionName.includes(desiredInfo)) {
+    if (checkForDesiredInfo(optionName, desiredInfo)) {
       desiredInfoId = await getProperty(optionElement, htmlTagAttributes.VALUE);
       break;
     }
   }
 
+  // Todo: create a select function that handles all of this
   await Promise.all([
     page.select(selectElementIdentifier, desiredInfoId),
     page.waitForSelector(selectElementIdentifier),
@@ -139,6 +162,7 @@ const signUpForGivenClass = async (page, classToSignUpFor) => {
   await page.waitForFunction(
     () => document.querySelector('select#P63_SECTION_INSTRUCTOR').length > 1,
   );
+
   await selectClassInfo(
     page,
     selectTagIdentifiers.SECTION_INSTRUCTOR,
@@ -224,6 +248,30 @@ const format = (string, desiredNumberSize) => {
   return beforeDigits + zeroInsertion + remainingCharacters;
 };
 
+/**
+ * Do some formatting on the user-inputted class data. e.g. 1c => 001c
+ * Suppose we had a class number of 11, but 111 also exists in that department.
+ * We could have a collision. So, for class numbers, we always have 3-digits
+ * e.g. 011 vs 111
+ * @param {*} classes
+ */
+const formatClasses = (classes) => {
+  const sizeOfClassNumber = 3;
+  const sizeOfSectionNumber = 2;
+
+  for (const desiredClass of classes) {
+    desiredClass.offeringName = format(
+      desiredClass.offeringName,
+      sizeOfClassNumber,
+    );
+
+    desiredClass.sectionInstructor = format(
+      desiredClass.sectionInstructor,
+      sizeOfSectionNumber,
+    );
+  }
+};
+
 module.exports = {
   HTMLtag,
   clickElementWithCertainText,
@@ -232,5 +280,5 @@ module.exports = {
   getElementText,
   selectClassInfo,
   signUpForGivenClass,
-  format,
+  formatClasses,
 };

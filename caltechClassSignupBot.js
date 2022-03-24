@@ -7,41 +7,16 @@ const {
   getElementText,
   selectClassInfo,
   signUpForGivenClass,
-  format,
+  formatClasses,
 } = require('./utils');
 const { htmlTagAttributes } = require('./constants');
+const { classes } = require('./classes');
 
+// Grab USERNAME and PASSWORD from environment variables
 require('dotenv').config();
-
 const { USERNAME, PASSWORD } = process.env;
 
-const classes = [
-  {
-    department: 'Ma',
-    offeringName: 'Ma 1c',
-    sectionInstructor: '7',
-  },
-  // {
-  //   department: 'Ma',
-  //   offeringName: 'Ma 001C',
-  //   sectionInstructor: '07 Yu, T',
-  // },
-];
-
-const sizeOfClassNumber = 3;
-const sizeOfSectionNumber = 2;
-
-for (const desiredClass of classes) {
-  desiredClass.offeringName = format(
-    desiredClass.offeringName,
-    sizeOfClassNumber,
-  );
-
-  desiredClass.sectionInstructor = format(
-    desiredClass.sectionInstructor,
-    sizeOfSectionNumber,
-  );
-}
+formatClasses(classes);
 
 let config = {
   canViewBrowser: true,
@@ -49,6 +24,10 @@ let config = {
   classes: classes,
 };
 
+/**
+ * Signs a user into access.caltech.edu
+ * @param {*} page
+ */
 const signIn = async (page) => {
   await typeIntoElement(page, 'input[name=login]', USERNAME);
   await typeIntoElement(page, 'input[name=password]', PASSWORD);
@@ -59,11 +38,19 @@ const signIn = async (page) => {
   ]);
 };
 
+/**
+ * Signs a user up for their desired classes
+ * @param {*} page
+ * @param {string} enterNewCourseUrl – url for the page to enter new courses
+ */
 const signUpForClasses = async (page, enterNewCourseUrl) => {
   const classesToSignUpFor = config.classes;
 
   for (const classToSignUpFor of classesToSignUpFor) {
+    // Sign up for the desired class
     await signUpForGivenClass(page, classToSignUpFor);
+
+    // "Refresh" the page so we can sign up for another class
     await page.goto(enterNewCourseUrl);
   }
 };
@@ -121,6 +108,8 @@ const main = async () => {
     false,
   );
 
+  // Wait for the pop-up menu for Enter New Course to load, then grab the url
+  // for this iframe and open it in a new page
   await page2.waitForSelector('iframe');
   const frameHandle = await page2.$('iframe');
   const frameUrl = await getProperty(frameHandle, htmlTagAttributes.SRC);
@@ -128,6 +117,7 @@ const main = async () => {
   const page3 = await browser.newPage();
   await page3.goto(frameUrl);
 
+  // We have now opened the Enter New Course url, so we can sign up for classes
   await signUpForClasses(page3, frameUrl);
 };
 
